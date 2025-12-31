@@ -1,0 +1,19 @@
+[project]
+name = "jasmin-res-hq"
+version = "0.1.0"
+description = "JASMIN research tasks - ERA5 data processing"
+requires-python = ">=3.10"
+dependencies = [
+    "xarray",
+    "netcdf4",
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "dask",
+]
+
+[dependency-groups]
+dev = [
+    "ipython",
+    "jupyterlab",
+]

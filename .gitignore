@@ -1,0 +1,33 @@
+# Large outputs (sync via rclone, not git)
+outputs/*.nc
+outputs/*.grib
+outputs/*.hdf5
+outputs/*.zarr/
+outputs/**/*.nc
+outputs/**/*.grib
+
+# Keep outputs directory structure
+!outputs/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+
+# Environment files with secrets
+.env
+*.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.log
+*.bak

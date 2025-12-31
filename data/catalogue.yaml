@@ -1,0 +1,61 @@
+# Data Catalogue - JASMIN datasets used in this project
+#
+# Purpose:
+# - Reproducibility: Clear record of data sources
+# - Onboarding: New CC sessions know what's available
+# - Citations: Easy to generate data acknowledgements
+# - Debugging: Know which dataset caused issues
+#
+# Update this file when accessing new JASMIN datasets
+
+datasets:
+  - id: era5-single-levels
+    path: /badc/ecmwf-era5/data/oper/an_sfc/
+    description: ERA5 reanalysis single levels (surface variables)
+    variables: [2m_temperature, total_precipitation, 10m_wind]
+    temporal_range: 1940-present
+    spatial_extent: global
+    resolution: 0.25deg (~31km)
+    access_group: open
+    first_accessed: 2025-12-31
+    notes: |
+      Hourly data. Use xarray with chunks={'time': 24, 'latitude': 100, 'longitude': 100}
+      For HW-ER: use t2m for heatwave, tp for extreme rainfall
+
+  - id: era5-pressure-levels
+    path: /badc/ecmwf-era5/data/oper/an_pl/
+    description: ERA5 reanalysis pressure levels
+    variables: [geopotential, temperature, u_wind, v_wind, relative_humidity]
+    temporal_range: 1940-present
+    spatial_extent: global
+    resolution: 0.25deg
+    access_group: open
+    first_accessed: 2025-12-31
+    notes: |
+      For atmospheric circulation patterns during HW-ER events
+
+  - id: era5-land
+    path: /badc/ecmwf-era5-land/data/
+    description: ERA5-Land reanalysis (enhanced land surface)
+    variables: [soil_temperature, soil_moisture, skin_temperature]
+    temporal_range: 1950-present
+    spatial_extent: global land
+    resolution: 0.1deg (~9km)
+    access_group: open
+    first_accessed: 2025-12-31
+    notes: |
+      Higher resolution than ERA5 for land surface.
+      Useful for land-atmosphere feedbacks in heatwave analysis.
+
+  - id: ukmo-midas-open
+    path: /badc/ukmo-midas-open/data/uk-hourly-weather-obs/
+    description: UK Met Office MIDAS hourly observations
+    variables: [air_temperature, precipitation, wind_speed, humidity]
+    temporal_range: 1950-present
+    spatial_extent: UK stations
+    resolution: station-based
+    access_group: open
+    first_accessed: 2025-12-31
+    notes: |
+      For validation of ERA5/SuPy outputs.
+      Quality flags in 'src_flag' column.
