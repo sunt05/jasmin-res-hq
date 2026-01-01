@@ -9,7 +9,7 @@ Multi-location Claude Code coordination for JASMIN-based research.
 | Location | Path | Purpose |
 |----------|------|---------|
 | **JASMIN** | `/gws/nopw/j04/landsurf_rdg/sunt05/jasmin-res-hq/` | Data access, prototyping |
-| **Local** | `~/LOCAL/personal-notes/projects/jasmin-res-hq/` | Vault context, orchestration |
+| **Local** | `~/conductor/jasmin-res-hq/` | Orchestration, vault integration |
 | **UCL** | `~/jasmin-res-hq/` | Heavy compute (96 cores, 754GB) |
 
 ## Monorepo Structure
@@ -98,6 +98,22 @@ Run `/handoff` to:
 Update `data/catalogue.yaml` when accessing new JASMIN datasets.
 Shared across all tasks in this monorepo.
 
+## CRITICAL: Check CEDA Availability First
+
+> **Before designing any research workflow, verify data availability on CEDA.**
+
+CEDA mirrors only ~20% of ERA5 variables. See `docs/ceda-data-availability.md` for:
+- Full list of available/unavailable variables
+- How to verify on filesystem
+- CDS API fallback for missing variables
+
+Quick check on JASMIN:
+```bash
+ls /badc/ecmwf-era5/data/oper/an_sfc/2020/01/01/*.{variable}.nc
+```
+
+Key unavailable variables: **tp** (precipitation), **sp** (surface pressure), **ssrd/strd** (radiation)
+
 ## Quick Reference
 
 ```bash
@@ -109,8 +125,7 @@ git pull && scc
 ssh ucl && tmc && crh
 git pull && scc
 
-# On Local - pull remote changes
-cd ~/LOCAL/personal-notes
-git subtree pull --prefix=projects/jasmin-res-hq \
-    git@github.com:sunt05/jasmin-res-hq.git main --squash
+# On Local
+cd ~/conductor/jasmin-res-hq
+git pull && scc
 ```
