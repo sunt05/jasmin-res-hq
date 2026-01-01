@@ -8,7 +8,7 @@ Default variables for HW-ER:
   - 2t: 2m temperature (heatwave detection)
   - 2d: 2m dewpoint (humidity, heat stress)
   - 10u, 10v: 10m wind (heat stress)
-  - sp: surface pressure (WRF forcing)
+  - msl: mean sea level pressure (WRF forcing)
   - tp: total precipitation (extreme rainfall)
 
 Usage:
@@ -18,8 +18,9 @@ Usage:
     # Custom variables
     uv run python scripts/extract_era5_batch.py --years 2020 --variables 2t tp
 
-Note: tp, ssrd, strd are in fc_sfc archive (forecasts), others in an_sfc (analysis).
-      Script assumes all are in an_sfc - verify paths if extraction fails.
+Note: On CEDA/JASMIN, only an_sfc variables are hourly instantaneous.
+      Precipitation (tp) and radiation (ssrd, strd) are NOT in CEDA ERA5 archive.
+      These must be downloaded from CDS to GWS if needed.
 """
 
 import argparse
@@ -44,19 +45,20 @@ VAR_MAP = {
     "10u": "u10",     # 10m u-wind (m/s)
     "10v": "v10",     # 10m v-wind (m/s)
     # Pressure (WRF forcing, heat stress calcs)
-    "sp": "sp",       # Surface pressure (Pa)
+    # "sp": "sp",     # Surface pressure (Pa) - NOT ON CEDA an_sfc
     "msl": "msl",     # Mean sea level pressure (Pa)
-    # Precipitation (extreme rainfall)
-    "tp": "tp",       # Total precipitation (m) - in fc_sfc archive
-    # Radiation (heat stress indices)
-    "ssrd": "ssrd",   # Surface solar radiation down (J/m²) - in fc_sfc
-    "strd": "strd",   # Surface thermal radiation down (J/m²) - in fc_sfc
+    # Precipitation (extreme rainfall) - NOT ON CEDA, download from CDS
+    # "tp": "tp",     # Total precipitation (m) - requires CDS download
+    # Radiation (heat stress indices) - NOT ON CEDA, download from CDS
+    # "ssrd": "ssrd", # Surface solar radiation down (J/m²) - requires CDS download
+    # "strd": "strd", # Surface thermal radiation down (J/m²) - requires CDS download
     # Moisture (atmospheric water)
     "tcwv": "tcwv",   # Total column water vapour (kg/m²)
 }
 
-# Default variables for HW-ER analysis
-HWER_VARIABLES = ["2t", "2d", "10u", "10v", "sp", "tp"]
+# Default variables for HW-ER analysis (available on CEDA)
+# Note: tp (precipitation) requires separate CDS download
+HWER_VARIABLES = ["2t", "2d", "10u", "10v", "msl"]
 
 
 def load_cities(csv_path: Path) -> pd.DataFrame:
@@ -167,7 +169,7 @@ def extract_year(
             }
         )
 
-        out_file = output_dir / f"era5_{city_id}_{city_name}.nc"
+        out_file = output_dir / f"era5_{year}_{city_id}_{city_name}.nc"
         ds.to_netcdf(out_file)
 
     print(f"  Done: {output_dir}")
